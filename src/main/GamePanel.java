@@ -5,11 +5,11 @@ import entity.Player;
 import javax.swing.*;
 import java.awt.*;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
     // SCREEN SETTINGS
     final int originalTileSize = 16;
     final int scale = 3;
-    public int tileSize = originalTileSize * scale;
+    public final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
     final int screenWidth = tileSize * maxScreenCol; // 768
@@ -23,9 +23,6 @@ public class GamePanel extends JPanel implements Runnable{
     Player player = new Player(this, keyHandler);
 
     // set player's default position
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
 
 
     public GamePanel() {
@@ -36,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
     }
 
-    public void startGameThread(){
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -47,21 +44,18 @@ public class GamePanel extends JPanel implements Runnable{
         double nextDrawTime = System.nanoTime();
         long fpsCounter = 0;
         long startTime = System.nanoTime();
-        while(gameThread != null){
-
+        while (gameThread != null) {
             update();
-
             repaint();
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime = remainingTime / 1000000;
 
-                if(remainingTime < 0){
+                if (remainingTime < 0) {
                     remainingTime = 0;
                 }
-                Thread.sleep((long)remainingTime);
+                Thread.sleep((long) remainingTime);
                 nextDrawTime += drawInterval;
-
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -69,7 +63,7 @@ public class GamePanel extends JPanel implements Runnable{
             fpsCounter++;
 
             // If a second has passed, print the FPS and reset the counter
-            if(System.nanoTime() - startTime >= 1000000000) {
+            if (System.nanoTime() - startTime >= 1000000000) {
                 System.out.println("FPS: " + fpsCounter);
                 fpsCounter = 0;
                 startTime = System.nanoTime();
@@ -77,10 +71,11 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void update(){
+    public void update() {
         player.update();
     }
-    public void paintComponent(Graphics g){
+
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         // draw the game screen
         Graphics2D g2 = (Graphics2D) g;
