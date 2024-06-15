@@ -14,12 +14,12 @@ public class TileManager {
         tile = new Tile[10];
 
     }
-    public void getTileImage(){
-        try{
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read()
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
+//    public void getTileImage(){
+//        try{
+//            tile[0] = new Tile();
+//            tile[0].image = ImageIO.read();
+//        }catch(IOException e){
+//            e.printStackTrace();
+//        }
+//    }
 }

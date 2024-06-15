@@ -5,7 +5,7 @@ import entity.Player;
 import javax.swing.*;
 import java.awt.*;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable, GameControl {
     // SCREEN SETTINGS
     final int originalTileSize = 16;
     final int scale = 3;
@@ -17,13 +17,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     int FPS = 60;
     int drawCount = 0;
+    boolean paused = false; // Add a paused state
 
-    KeyHandler keyHandler = new KeyHandler();
+    KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
     Player player = new Player(this, keyHandler);
-
-    // set player's default position
-
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -45,8 +43,10 @@ public class GamePanel extends JPanel implements Runnable {
         long fpsCounter = 0;
         long startTime = System.nanoTime();
         while (gameThread != null) {
-            update();
-            repaint();
+            if (!paused) { // Only update and repaint if not paused
+                update();
+                repaint();
+            }
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime = remainingTime / 1000000;
@@ -81,5 +81,38 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         player.draw(g2);
         g2.dispose();
+    }
+
+    @Override
+    public void startGame() {
+        paused = false;
+        if (gameThread == null) {
+            startGameThread();
+        }
+        this.requestFocusInWindow(); // Ensure the game panel has focus
+    }
+
+    @Override
+    public void pauseGame() {
+        paused = true;
+        // Show pause menu dialog
+        SwingUtilities.invokeLater(() -> {
+            int result = JOptionPane.showOptionDialog(this, "Game Paused", "Pause",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    null, new String[]{"Resume", "Quit"}, "Resume");
+            if (result == 0) {
+                paused = false;
+                this.requestFocusInWindow(); // Ensure the game panel has focus
+            } else if (result == 1) {
+                quitGame();
+            }
+        });
+    }
+
+    @Override
+    public void quitGame() {
+        paused = true;
+        gameThread = null;
+        System.exit(0);
     }
 }
