@@ -15,6 +15,9 @@ public class Player extends Entity {
     private int spriteCounter = 0;
     private int spriteNum = 1;
 
+    private BufferedImage up1, up2, up3, down1, down2, down3;
+    private BufferedImage left1, left2, left3, right1, right2, right3;
+
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
@@ -32,22 +35,18 @@ public class Player extends Entity {
 
     public void getPlayerImage() {
         try {
-            up = loadImage("/res/player/tile004.png");
-            up1 = loadImage("/res/player/tile005.png");
-            up2 = loadImage("/res/player/tile006.png");
-            up3 = loadImage("/res/player/tile007.png");
-            left = loadImage("/res/player/tile012.png");
-            left1 = loadImage("/res/player/tile013.png");
-            left2 = loadImage("/res/player/tile014.png");
-            left3 = loadImage("/res/player/tile015.png");
-            right = loadImage("/res/player/tile008.png");
-            right1 = loadImage("/res/player/tile009.png");
-            right2 = loadImage("/res/player/tile010.png");
-            right3 = loadImage("/res/player/tile011.png");
-            down = loadImage("/res/player/tile000.png");
-            down1 = loadImage("/res/player/tile001.png");
-            down2 = loadImage("/res/player/tile002.png");
-            down3 = loadImage("/res/player/tile003.png");
+            up1 = loadImage("/res/player/tile004.png");
+            up2 = loadImage("/res/player/tile005.png");
+            up3 = loadImage("/res/player/tile006.png");
+            down1 = loadImage("/res/player/tile000.png");
+            down2 = loadImage("/res/player/tile001.png");
+            down3 = loadImage("/res/player/tile002.png");
+            left1 = loadImage("/res/player/tile012.png");
+            left2 = loadImage("/res/player/tile013.png");
+            left3 = loadImage("/res/player/tile014.png");
+            right1 = loadImage("/res/player/tile008.png");
+            right2 = loadImage("/res/player/tile009.png");
+            right3 = loadImage("/res/player/tile010.png");
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1); // Exit if images are not found

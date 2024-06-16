@@ -1,34 +1,42 @@
 package main;
 
 import entity.Player;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable, GameControl {
-    // SCREEN SETTINGS
     final int originalTileSize = 16;
     final int scale = 3;
     public final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol; // 768
-    final int screenHeight = tileSize * maxScreenRow; // 576
+    final int screenWidth = tileSize * maxScreenCol;
+    final int screenHeight = tileSize * maxScreenRow;
 
     int FPS = 60;
-    int drawCount = 0;
-    boolean paused = false; // Add a paused state
+    boolean paused = false;
 
     KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
     Player player = new Player(this, keyHandler);
+    private AudioPlayer backgroundMusic;
 
-    public GamePanel() {
+    public AudioPlayer getBackgroundMusic() {
+        return backgroundMusic;
+    }
+
+    public GamePanel(AudioPlayer backgroundMusic) {
+        this.backgroundMusic = backgroundMusic;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+    }
+
+    @Override
+    public void startGame() {
+        startGameThread();
     }
 
     public void startGameThread() {
@@ -40,10 +48,8 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     public void run() {
         double drawInterval = 1000000000 / FPS;
         double nextDrawTime = System.nanoTime();
-        long fpsCounter = 0;
-        long startTime = System.nanoTime();
         while (gameThread != null) {
-            if (!paused) { // Only update and repaint if not paused
+            if (!paused) {
                 update();
                 repaint();
             }
@@ -59,15 +65,6 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            drawCount++;
-            fpsCounter++;
-
-            // If a second has passed, print the FPS and reset the counter
-            if (System.nanoTime() - startTime >= 1000000000) {
-                System.out.println("FPS: " + fpsCounter);
-                fpsCounter = 0;
-                startTime = System.nanoTime();
-            }
         }
     }
 
@@ -75,44 +72,62 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         player.update();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // draw the game screen
         Graphics2D g2 = (Graphics2D) g;
         player.draw(g2);
         g2.dispose();
     }
 
     @Override
-    public void startGame() {
-        paused = false;
-        if (gameThread == null) {
-            startGameThread();
+    public void togglePause() {
+        paused = !paused;
+        if (paused) {
+            backgroundMusic.pause();
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (topFrame == null) {
+                System.err.println("topFrame is null. Ensure GamePanel is added to a JFrame before calling togglePause.");
+                return;
+            }
+            JLayeredPane layeredPane = new JLayeredPane();
+            layeredPane.setPreferredSize(new Dimension(screenWidth, screenHeight));
+            PausePanel pausePanel = new PausePanel(this);
+            pausePanel.setBounds(0, 0, screenWidth, screenHeight);
+            layeredPane.add(this, JLayeredPane.DEFAULT_LAYER);
+            layeredPane.add(pausePanel, JLayeredPane.PALETTE_LAYER);
+            topFrame.setContentPane(layeredPane);
+            topFrame.validate();
+        } else {
+            backgroundMusic.resume();
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.setContentPane(this);
+            topFrame.validate();
+            this.requestFocus();
         }
-        this.requestFocusInWindow(); // Ensure the game panel has focus
+    }
+
+    @Override
+    public boolean isPaused() {
+        return paused;
+    }
+
+    @Override
+    public void resumeGame() {
+        if (paused) {
+            togglePause();
+        }
     }
 
     @Override
     public void pauseGame() {
-        paused = true;
-        // Show pause menu dialog
-        SwingUtilities.invokeLater(() -> {
-            int result = JOptionPane.showOptionDialog(this, "Game Paused", "Pause",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, new String[]{"Resume", "Quit"}, "Resume");
-            if (result == 0) {
-                paused = false;
-                this.requestFocusInWindow(); // Ensure the game panel has focus
-            } else if (result == 1) {
-                quitGame();
-            }
-        });
+        if (!paused) {
+            togglePause();
+        }
     }
 
     @Override
     public void quitGame() {
-        paused = true;
-        gameThread = null;
         System.exit(0);
     }
 }
