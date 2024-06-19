@@ -194,7 +194,7 @@ public class StartPanel extends JPanel {
             String highScoreText = String.format("<html>HIGH SCORE:<br>%s: %d seconds</html>", bestEntry.getName(), bestEntry.getTime());
             highScoreLabel.setText(highScoreText);
         } else {
-            highScoreLabel.setText("<html>High Score:<br>None</html>");
+            highScoreLabel.setText("<html>HIGH SCORE:<br>None</html>");
         }
     }
 }
