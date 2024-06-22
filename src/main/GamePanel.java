@@ -1,9 +1,12 @@
 package main;
 
 import entity.Player;
+import entity.Enemy;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,8 +16,8 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     public final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
 
     int FPS = 60;
     boolean paused = false;
@@ -22,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
     Player player = new Player(this, keyHandler);
+    List<Enemy> enemies = new ArrayList<>();
     private AudioPlayer backgroundMusic;
 
     public AudioPlayer getBackgroundMusic() {
@@ -48,6 +52,12 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         timerLabel.setFont(new Font("OneSize", Font.PLAIN, 20));
         this.add(timerLabel);
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        // Initialize enemies
+        initializeEnemies();
+
+        // Start enemy spawning
+        startEnemySpawning();
     }
 
     @Override
@@ -115,8 +125,32 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         }
     }
 
+    private void initializeEnemies() {
+        // Create and add enemies to the list
+        for (int i = 0; i < 20; i++) { // For example, create 5 enemies
+            enemies.add(new Enemy(this));
+        }
+    }
+
+    private void startEnemySpawning() {
+        Timer enemySpawnTimer = new Timer();
+        enemySpawnTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                spawnEnemy();
+            }
+        }, 0, 3000); // Spawn a new enemy every 3 seconds
+    }
+
+    private void spawnEnemy() {
+        enemies.add(new Enemy(this));
+    }
+
     public void update() {
         player.update();
+        for (Enemy enemy : enemies) {
+            enemy.update(); // Update each enemy
+        }
     }
 
     @Override
@@ -124,6 +158,9 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         player.draw(g2);
+        for (Enemy enemy : enemies) {
+            enemy.draw(g2); // Draw each enemy
+        }
         g2.dispose();
     }
 
