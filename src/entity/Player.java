@@ -125,10 +125,10 @@ public class Player extends Entity {
 
         if (moving) {
             // Check for HP increasing tile
-            int currentTileCode = gamePanel.getTileManager().getPlayerTileCode();
-            if (gamePanel.getTileManager().isHpIncreasingTile(currentTileCode)) {
-                increaseHp(10); // Increase HP by a specified amount
-            }
+//            int currentTileCode = gamePanel.getTileManager().getPlayerTileCode();
+//            if (gamePanel.getTileManager().isHpIncreasingTile(currentTileCode)) {
+//                increaseHp(10); // Increase HP by a specified amount
+//            }
             spriteCounter++;
             if (spriteCounter > 10) {
                 spriteNum++;
