@@ -1,4 +1,3 @@
-// TileManager.java
 package main.tile;
 
 import main.GamePanel;
@@ -11,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import entity.Player;
+import entity.Enemy;
 
 public class TileManager {
     private final Set<Integer> hpIncreasingTiles = Set.of(

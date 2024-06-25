@@ -24,8 +24,8 @@ public class Enemy extends Entity {
     }
 
     public void setDefaultValues() {
-        x = (int)(Math.random() * gamePanel.screenWidth); // Random starting x position
-        y = (int)(Math.random() * gamePanel.screenHeight); // Random starting y position
+        worldX = (int)(Math.random() * gamePanel.screenWidth); // Random starting x position
+        worldY = (int)(Math.random() * gamePanel.screenHeight); // Random starting y position
         speed = 2;
         direction = getRandomDirection();
     }
@@ -106,16 +106,16 @@ public class Enemy extends Entity {
         // Simple AI for enemy movement
         switch (direction) {
             case "up":
-                y -= speed;
+                worldX -= speed;
                 break;
             case "down":
-                y += speed;
+                worldY += speed;
                 break;
             case "left":
-                x -= speed;
+                worldX -= speed;
                 break;
             case "right":
-                x += speed;
+                worldY += speed;
                 break;
         }
 
@@ -168,6 +168,6 @@ public class Enemy extends Entity {
                 break;
         }
         BufferedImage image = images[spriteNum - 1];
-        g2.drawImage(image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
+        g2.drawImage(image, worldX, worldY, gamePanel.tileSize, gamePanel.tileSize, null);
     }
 }

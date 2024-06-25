@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
 
-    Player player = new Player(this, keyHandler);
+    public Player player = new Player(this, keyHandler);
     List<Enemy> enemies = new ArrayList<>();
 
     private AudioPlayer backgroundMusic;
