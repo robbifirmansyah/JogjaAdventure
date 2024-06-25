@@ -12,6 +12,7 @@ public class StartPanel extends JPanel {
     private JLabel startButton;
     private JLabel quitButton;
     private JLabel volumeButton;
+    private JLabel highScoreLabel; // Tambahkan label untuk high score
     private JLabel titleLabel;
     private int volumeLevel = 1;
     private JFrame window;
@@ -43,10 +44,17 @@ public class StartPanel extends JPanel {
         quitButton = createButton(quitImage, 410, 350);
         volumeButton = createButton(volume1, 675, 490);
 
+        highScoreLabel = new JLabel(); // Inisialisasi label untuk high score
+        highScoreLabel.setBounds(0, 450, 768, 50); // Menempatkan label di tengah bawah
+        highScoreLabel.setFont(new Font("OneSize", Font.PLAIN, 24));
+        highScoreLabel.setForeground(new Color(172, 99, 53)); // Mengatur warna font
+        highScoreLabel.setHorizontalAlignment(SwingConstants.CENTER); // Teks berada di tengah
+
         add(titleLabel);
         add(startButton);
         add(quitButton);
         add(volumeButton);
+        add(highScoreLabel); // Tambahkan label ke panel
 
         startButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -94,6 +102,7 @@ public class StartPanel extends JPanel {
             }
         });
 
+        loadHighScores(); // Panggil metode untuk memuat high score
         startCloudAnimation();
     }
 
@@ -174,6 +183,18 @@ public class StartPanel extends JPanel {
 
         for (int i = 0; i < clouds.size(); i++) {
             g.drawImage(clouds.get(i), cloudPositions.get(i).x, cloudPositions.get(i).y, this);
+        }
+    }
+
+    private void loadHighScores() {
+        HighScoreManager highScoreManager = new HighScoreManager();
+        List<HighScoreEntry> highScores = highScoreManager.getHighScores();
+        if (!highScores.isEmpty()) {
+            HighScoreEntry bestEntry = highScores.get(0);
+            String highScoreText = String.format("<html>HIGH SCORE:<br>%s: %d seconds</html>", bestEntry.getName(), bestEntry.getTime());
+            highScoreLabel.setText(highScoreText);
+        } else {
+            highScoreLabel.setText("<html>HIGH SCORE:<br>None</html>");
         }
     }
 }
