@@ -49,44 +49,36 @@ public class Enemy extends Entity {
     public void getEnemyImage() {
         try {
             upImages = new BufferedImage[]{
-                    loadImage("/res/enemy/up1.png"),
-                    loadImage("/res/enemy/up2.png"),
-                    loadImage("/res/enemy/up3.png"),
-                    loadImage("/res/enemy/up4.png"),
-                    loadImage("/res/enemy/up5.png"),
-                    loadImage("/res/enemy/up6.png"),
-                    loadImage("/res/enemy/up7.png"),
-                    loadImage("/res/enemy/up8.png")
+                    loadImage("/res/enemy/swordup1.png"),
+                    loadImage("/res/enemy/swordup2.png"),
+                    loadImage("/res/enemy/swordup3.png"),
+                    loadImage("/res/enemy/swordup4.png"),
+                    loadImage("/res/enemy/swordup5.png"),
+                    loadImage("/res/enemy/swordup6.png")
             };
             downImages = new BufferedImage[]{
-                    loadImage("/res/enemy/down1.png"),
-                    loadImage("/res/enemy/down2.png"),
-                    loadImage("/res/enemy/down3.png"),
-                    loadImage("/res/enemy/down4.png"),
-                    loadImage("/res/enemy/down5.png"),
-                    loadImage("/res/enemy/down6.png"),
-                    loadImage("/res/enemy/down7.png"),
-                    loadImage("/res/enemy/down8.png")
+                    loadImage("/res/enemy/sworddown1.png"),
+                    loadImage("/res/enemy/sworddown2.png"),
+                    loadImage("/res/enemy/sworddown3.png"),
+                    loadImage("/res/enemy/sworddown4.png"),
+                    loadImage("/res/enemy/sworddown5.png"),
+                    loadImage("/res/enemy/sworddown6.png")
             };
             leftImages = new BufferedImage[]{
-                    loadImage("/res/enemy/left1.png"),
-                    loadImage("/res/enemy/left2.png"),
-                    loadImage("/res/enemy/left3.png"),
-                    loadImage("/res/enemy/left4.png"),
-                    loadImage("/res/enemy/left5.png"),
-                    loadImage("/res/enemy/left6.png"),
-                    loadImage("/res/enemy/left7.png"),
-                    loadImage("/res/enemy/left8.png")
+                    loadImage("/res/enemy/swordleft1.png"),
+                    loadImage("/res/enemy/swordleft2.png"),
+                    loadImage("/res/enemy/swordleft3.png"),
+                    loadImage("/res/enemy/swordleft4.png"),
+                    loadImage("/res/enemy/swordleft5.png"),
+                    loadImage("/res/enemy/swordleft6.png")
             };
             rightImages = new BufferedImage[]{
-                    loadImage("/res/enemy/right1.png"),
-                    loadImage("/res/enemy/right2.png"),
-                    loadImage("/res/enemy/right3.png"),
-                    loadImage("/res/enemy/right4.png"),
-                    loadImage("/res/enemy/right5.png"),
-                    loadImage("/res/enemy/right6.png"),
-                    loadImage("/res/enemy/right7.png"),
-                    loadImage("/res/enemy/right8.png")
+                    loadImage("/res/enemy/swordright1.png"),
+                    loadImage("/res/enemy/swordright2.png"),
+                    loadImage("/res/enemy/swordright3.png"),
+                    loadImage("/res/enemy/swordright4.png"),
+                    loadImage("/res/enemy/swordright5.png"),
+                    loadImage("/res/enemy/swordright6.png")
             };
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,6 +160,6 @@ public class Enemy extends Entity {
                 break;
         }
         BufferedImage image = images[spriteNum - 1];
-        g2.drawImage(image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
+        g2.drawImage(image, x, y, 64, 64, null);
     }
 }
