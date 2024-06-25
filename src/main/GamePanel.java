@@ -1,6 +1,8 @@
 package main;
 
 import entity.Player;
+import main.tile.TileManager;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,21 +10,33 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     final int originalTileSize = 16;
     final int scale = 3;
     public final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    final int maxScreenCol = 16;  // Sesuaikan jumlah kolom layar
+    final int maxScreenRow = 12;  // Sesuaikan jumlah baris layar
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
+
+    // World settings
+    public final int maxWorldCol = 48;  // Misalnya ukuran peta 50x50 tiles
+    public final int maxWorldRow = 108;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
 
     int FPS = 60;
     boolean paused = false;
 
     KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
-    Player player = new Player(this, keyHandler);
+    public Player player = new Player(this, keyHandler);
     private AudioPlayer backgroundMusic;
+
+    private TileManager tileManager = new TileManager(this);
 
     public AudioPlayer getBackgroundMusic() {
         return backgroundMusic;
+    }
+
+    public TileManager getTileManager() {
+        return tileManager;
     }
 
     public GamePanel(AudioPlayer backgroundMusic) {
@@ -76,7 +90,13 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        // Draw the map
+        tileManager.draw(g2);
+
+        // Draw the player
         player.draw(g2);
+
         g2.dispose();
     }
 
@@ -130,4 +150,10 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     public void quitGame() {
         System.exit(0);
     }
+
+    // Method to toggle movement restriction
+    public void toggleMovementRestriction(boolean enable) {
+        player.setRestrictMovement(enable);
+    }
+
 }
