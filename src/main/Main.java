@@ -3,6 +3,7 @@ package main;
 import javax.swing.*;
 
 public class Main {
+
     public static void main(String[] args) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -12,6 +13,11 @@ public class Main {
         // Initialize AudioPlayer and play background music
         AudioPlayer backgroundMusic = new AudioPlayer("/res/audio/background_music.wav");
         backgroundMusic.play();
+
+        GamePanel gamePanel = new GamePanel(backgroundMusic); // Pass backgroundMusic to GamePanel
+
+//         Toggle movement restriction example
+//        gamePanel.toggleMovementRestriction(false);
 
         StartPanel startPanel = new StartPanel(window, backgroundMusic);
         window.add(startPanel);
