@@ -2,14 +2,9 @@ package main;
 
 import entity.Player;
 import main.tile.TileManager;
-import entity.Enemy;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements Runnable, GameControl {
     final int originalTileSize = 16;
@@ -25,7 +20,6 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     public final int maxWorldRow = 108;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
-
 
     int FPS = 60;
     boolean paused = false;
@@ -44,15 +38,9 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         return backgroundMusic;
     }
 
-
     public TileManager getTileManager() {
         return tileManager;
     }
-    private Timer gameTimer;
-    private long startTime;
-    private long elapsedTime;
-    private JLabel timerLabel;
-
 
     public GamePanel(AudioPlayer backgroundMusic) {
         this.backgroundMusic = backgroundMusic;
@@ -61,56 +49,11 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-
-        // Initialize Timer
-        gameTimer = new Timer();
-        timerLabel = new JLabel("Time: 0");
-        timerLabel.setForeground(Color.WHITE);
-        timerLabel.setFont(new Font("OneSize", Font.PLAIN, 20));
-        this.add(timerLabel);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-        // Initialize enemies
-        initializeEnemies();
-
-        // Start enemy spawning
-        startEnemySpawning();
     }
 
     @Override
     public void startGame() {
-        startTime = System.currentTimeMillis();
         startGameThread();
-        startTimer();
-    }
-
-    private void startTimer() {
-        gameTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                elapsedTime = System.currentTimeMillis() - startTime;
-                timerLabel.setText("Time: " + (elapsedTime / 1000) + " seconds");
-            }
-        }, 0, 1000); // Update every second
-    }
-
-    private void stopTimer() {
-        gameTimer.cancel();
-    }
-
-    // Call this method when the game is completed
-    public void completeGame() {
-        stopTimer();
-        saveHighScore(elapsedTime / 1000); // Save elapsed time in seconds
-    }
-
-    private void saveHighScore(long timeInSeconds) {
-        String playerName = JOptionPane.showInputDialog(this, "Congratulations! Enter your name:");
-        if (playerName != null && !playerName.isEmpty()) {
-            HighScoreManager highScoreManager = new HighScoreManager();
-            highScoreManager.addHighScore(new HighScoreEntry(playerName, timeInSeconds));
-            highScoreManager.saveHighScores();
-        }
     }
 
     public void startGameThread() {
@@ -142,32 +85,8 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
         }
     }
 
-    private void initializeEnemies() {
-        // Create and add enemies to the list
-        for (int i = 0; i < 20; i++) { // For example, create 5 enemies
-            enemies.add(new Enemy(this));
-        }
-    }
-
-    private void startEnemySpawning() {
-        Timer enemySpawnTimer = new Timer();
-        enemySpawnTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                spawnEnemy();
-            }
-        }, 0, 3000); // Spawn a new enemy every 3 seconds
-    }
-
-    private void spawnEnemy() {
-        enemies.add(new Enemy(this));
-    }
-
     public void update() {
         player.update();
-        for (Enemy enemy : enemies) {
-            enemy.update(); // Update each enemy
-        }
     }
 
     @Override
@@ -180,9 +99,7 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
 
         // Draw the player
         player.draw(g2);
-        for (Enemy enemy : enemies) {
-            enemy.draw(g2); // Draw each enemy
-        }
+
         g2.dispose();
     }
 

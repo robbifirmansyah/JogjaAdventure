@@ -1,3 +1,4 @@
+// KeyHandler.java
 package main;
 
 import java.awt.event.KeyEvent;
@@ -6,10 +7,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
     GameControl gameControl;
 
-    public boolean upPressed;
-    public boolean downPressed;
-    public boolean leftPressed;
-    public boolean rightPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     public KeyHandler(GameControl gameControl) {
         this.gameControl = gameControl;
@@ -42,7 +40,6 @@ public class KeyHandler implements KeyListener {
                 gameControl.pauseGame();
             }
         }
-
     }
 
     @Override
