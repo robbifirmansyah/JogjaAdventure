@@ -91,8 +91,12 @@ public class Player extends Entity {
     }
 
     public void update() {
-
         boolean moving = false;
+
+        if (hp <= 0){
+            gamePanel.checkGameOver();
+            return;
+        }
 
         if (keyHandler.upPressed) {
             if (canMove(worldX, worldY - speed)) {

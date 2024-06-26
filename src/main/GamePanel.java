@@ -52,7 +52,8 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     private long startTime;
     private long elapsedTime;
     private JLabel timerLabel;
-
+    private boolean gameOver = false;
+    private GameOverPanel gameOverPanel;
 
     public GamePanel(AudioPlayer backgroundMusic) {
         this.backgroundMusic = backgroundMusic;
@@ -164,6 +165,9 @@ public class GamePanel extends JPanel implements Runnable, GameControl {
     }
 
     public void update() {
+        if (gameOver) {
+            return;
+        }
         player.update();
         for (Enemy enemy : enemies) {
             enemy.update(); // Update each enemy
