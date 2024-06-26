@@ -11,7 +11,7 @@ public class Main {
         window.setTitle("Jogja Adventure");
 
         // Initialize AudioPlayer and play background music
-        AudioPlayer backgroundMusic = new AudioPlayer("/res/audio/background_music.wav");
+        AudioPlayer backgroundMusic = new AudioPlayer();
         backgroundMusic.play();
 
         GamePanel gamePanel = new GamePanel(backgroundMusic); // Pass backgroundMusic to GamePanel

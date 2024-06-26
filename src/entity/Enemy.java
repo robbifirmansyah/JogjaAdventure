@@ -9,6 +9,9 @@ import java.io.IOException;
 
 public class Enemy extends Entity {
     GamePanel gamePanel;
+    private int startTileCode, endTileCode;
+    private boolean movingToEnd = true;
+    private int currentTileCode;
     private int spriteCounter = 0;
     private int spriteNum = 1;
 
@@ -17,15 +20,16 @@ public class Enemy extends Entity {
     private BufferedImage[] leftImages;
     private BufferedImage[] rightImages;
 
-    public Enemy(GamePanel gamePanel) {
+    public Enemy(GamePanel gamePanel, int startTileCode, int endTileCode) {
         this.gamePanel = gamePanel;
+        this.startTileCode = startTileCode;
+        this.endTileCode = endTileCode;
+        this.currentTileCode = startTileCode;
         setDefaultValues();
         getEnemyImage();
     }
 
     public void setDefaultValues() {
-        worldX = (int)(Math.random() * gamePanel.screenWidth); // Random starting x position
-        worldY = (int)(Math.random() * gamePanel.screenHeight); // Random starting y position
         speed = 2;
         direction = getRandomDirection();
     }
@@ -49,42 +53,42 @@ public class Enemy extends Entity {
     public void getEnemyImage() {
         try {
             upImages = new BufferedImage[]{
-                    loadImage("/res/enemy/up1.png"),
-                    loadImage("/res/enemy/up2.png"),
-                    loadImage("/res/enemy/up3.png"),
-                    loadImage("/res/enemy/up4.png"),
-                    loadImage("/res/enemy/up5.png"),
-                    loadImage("/res/enemy/up6.png"),
+                    loadImage("/res/enemy/swordup1.png"),
+                    loadImage("/res/enemy/swordup2.png"),
+                    loadImage("/res/enemy/swordup3.png"),
+                    loadImage("/res/enemy/swordup4.png"),
+                    loadImage("/res/enemy/swordup5.png"),
+                    loadImage("/res/enemy/swordup6.png"),
                     loadImage("/res/enemy/up7.png"),
                     loadImage("/res/enemy/up8.png")
             };
             downImages = new BufferedImage[]{
-                    loadImage("/res/enemy/down1.png"),
-                    loadImage("/res/enemy/down2.png"),
-                    loadImage("/res/enemy/down3.png"),
-                    loadImage("/res/enemy/down4.png"),
-                    loadImage("/res/enemy/down5.png"),
-                    loadImage("/res/enemy/down6.png"),
+                    loadImage("/res/enemy/sworddown1.png"),
+                    loadImage("/res/enemy/sworddown2.png"),
+                    loadImage("/res/enemy/sworddown3.png"),
+                    loadImage("/res/enemy/sworddown4.png"),
+                    loadImage("/res/enemy/sworddown5.png"),
+                    loadImage("/res/enemy/sworddown6.png"),
                     loadImage("/res/enemy/down7.png"),
                     loadImage("/res/enemy/down8.png")
             };
             leftImages = new BufferedImage[]{
-                    loadImage("/res/enemy/left1.png"),
-                    loadImage("/res/enemy/left2.png"),
-                    loadImage("/res/enemy/left3.png"),
-                    loadImage("/res/enemy/left4.png"),
-                    loadImage("/res/enemy/left5.png"),
-                    loadImage("/res/enemy/left6.png"),
+                    loadImage("/res/enemy/swordleft1.png"),
+                    loadImage("/res/enemy/swordleft2.png"),
+                    loadImage("/res/enemy/swordleft3.png"),
+                    loadImage("/res/enemy/swordleft4.png"),
+                    loadImage("/res/enemy/swordleft5.png"),
+                    loadImage("/res/enemy/swordleft6.png"),
                     loadImage("/res/enemy/left7.png"),
                     loadImage("/res/enemy/left8.png")
             };
             rightImages = new BufferedImage[]{
-                    loadImage("/res/enemy/right1.png"),
-                    loadImage("/res/enemy/right2.png"),
-                    loadImage("/res/enemy/right3.png"),
-                    loadImage("/res/enemy/right4.png"),
-                    loadImage("/res/enemy/right5.png"),
-                    loadImage("/res/enemy/right6.png"),
+                    loadImage("/res/enemy/swordright1.png"),
+                    loadImage("/res/enemy/swordright2.png"),
+                    loadImage("/res/enemy/swordright3.png"),
+                    loadImage("/res/enemy/swordright4.png"),
+                    loadImage("/res/enemy/swordright5.png"),
+                    loadImage("/res/enemy/swordright6.png"),
                     loadImage("/res/enemy/right7.png"),
                     loadImage("/res/enemy/right8.png")
             };
@@ -103,42 +107,7 @@ public class Enemy extends Entity {
     }
 
     public void update() {
-        // Simple AI for enemy movement
-        switch (direction) {
-            case "up":
-                worldX -= speed;
-                break;
-            case "down":
-                worldY += speed;
-                break;
-            case "left":
-                worldX -= speed;
-                break;
-            case "right":
-                worldY += speed;
-                break;
-        }
-
-        // Change direction at random intervals
-        spriteCounter++;
-        if (spriteCounter > 60) {
-            int randomDirection = (int) (Math.random() * 4);
-            switch (randomDirection) {
-                case 0:
-                    direction = "up";
-                    break;
-                case 1:
-                    direction = "down";
-                    break;
-                case 2:
-                    direction = "left";
-                    break;
-                case 3:
-                    direction = "right";
-                    break;
-            }
-            spriteCounter = 0;
-        }
+        moveTo(currentTileCode);
 
         // Update sprite animation
         spriteCounter++;
@@ -149,8 +118,35 @@ public class Enemy extends Entity {
             }
             spriteCounter = 0;
         }
+        System.out.println("Enemy position: (" + worldX + ", " + worldY + ")"); // Log posisi musuh
     }
 
+    private void moveTo(int targetTileCode) {
+        // Directly move based on tile codes
+        if (currentTileCode == targetTileCode) {
+            movingToEnd = !movingToEnd;
+            if (movingToEnd) {
+                currentTileCode = endTileCode;
+            } else {
+                currentTileCode = startTileCode;
+            }
+        }
+        switch (direction) {
+            case "up":
+                worldY -= speed; // Atur pergerakan ke atas
+                break;
+            case "down":
+                worldY += speed; // Atur pergerakan ke bawah
+                break;
+            case "left":
+                worldX -= speed; // Atur pergerakan ke kiri
+                break;
+            case "right":
+                worldX += speed; // Atur pergerakan ke kanan
+                break;
+        }
+
+    }
     public void draw(Graphics2D g2) {
         BufferedImage[] images = null;
         switch (direction) {

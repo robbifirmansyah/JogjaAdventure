@@ -8,9 +8,9 @@ public class AudioPlayer {
     private Clip clip;
     private FloatControl volumeControl;
 
-    public AudioPlayer(String filePath) {
+    public AudioPlayer() {
         try {
-            URL url = getClass().getResource(filePath);
+            URL url = getClass().getResource("/res/audio/background_music.wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
